@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
+import { prisma } from '../../config/prisma.js';
+import { auth, requireRole } from '../../middleware/auth.js';
+const router = Router();
+const schema = z.object({ name: z.string(), phone: z.string(), email: z.string().optional(), address: z.string().optional(), initialCapital: z.number(), currentCapital: z.number().optional(), interestRate: z.number(), interestMode: z.enum(['MONTHLY','QUARTERLY','HALF_YEARLY','YEARLY']).default('MONTHLY'), investmentDate: z.string().optional(), notes: z.string().optional() });
+router.get('/investors', auth, async (req, res) => { const q = String(req.query.q || ''); res.json(await prisma.investor.findMany({ where: q ? { OR: [{ name: { contains: q, mode: 'insensitive' } }, { user: { phone: { contains: q } } }] } : {}, include: { user: true }, orderBy: { createdAt: 'desc' }, take: 100 })); });
+router.post('/investor', auth, requireRole('ADMINISTRATOR'), async (req, res) => { const b = schema.parse(req.body); const password = await bcrypt.hash(b.phone.slice(-6).padStart(6,'0'), 12); const user = await prisma.user.upsert({ where:{ phone:b.phone }, update:{}, create:{ phone:b.phone, password, role:'INVESTOR' } }); const investor = await prisma.investor.upsert({ where:{ userId:user.id }, update:{ name:b.name,email:b.email,address:b.address,currentCapital:b.currentCapital ?? b.initialCapital,interestRate:b.interestRate,interestMode:b.interestMode,notes:b.notes }, create:{ userId:user.id,name:b.name,email:b.email,address:b.address,investmentDate:b.investmentDate ? new Date(b.investmentDate) : new Date(),initialCapital:b.initialCapital,currentCapital:b.currentCapital ?? b.initialCapital,interestRate:b.interestRate,interestMode:b.interestMode,notes:b.notes } }); res.status(201).json(investor); });
+router.put('/investor/:id', auth, requireRole('ADMINISTRATOR'), async (req, res) => res.json(await prisma.investor.update({ where:{ id:req.params.id }, data:req.body })));
+router.delete('/investor/:id', auth, requireRole('ADMINISTRATOR'), async (req, res) => res.json(await prisma.investor.update({ where:{ id:req.params.id }, data:{ status:'INACTIVE' } })));
+export default router;

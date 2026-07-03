@@ -1,0 +1,2 @@
+import { Sidebar } from '@/components/layout/sidebar'; import { Card } from '@/components/ui/card';
+export default function TransactionsPage(){ return <main className="flex min-h-screen"><Sidebar/><section className="flex-1 p-8"><h1 className="text-3xl font-bold">Transactions Ledger</h1><Card className="mt-6"><p>Passbook-style immutable history for investments, interest, withdrawals, adjustments and notes.</p></Card></section></main> }
