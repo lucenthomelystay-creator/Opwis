@@ -1,0 +1,2 @@
+import { Sidebar } from '@/components/layout/sidebar'; import { Card } from '@/components/ui/card';
+export default function SettingsPage(){ return <main className="flex min-h-screen"><Sidebar/><section className="flex-1 p-8"><h1 className="text-3xl font-bold">Settings</h1><Card className="mt-6"><p>Company name, logo, currency, financial year, interest method, backup and restore controls.</p></Card></section></main> }

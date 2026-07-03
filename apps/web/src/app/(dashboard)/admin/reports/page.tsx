@@ -1,0 +1,2 @@
+import { Sidebar } from '@/components/layout/sidebar'; import { Card } from '@/components/ui/card';
+export default function ReportsPage(){ return <main className="flex min-h-screen"><Sidebar/><section className="flex-1 p-8"><h1 className="text-3xl font-bold">Reports</h1><div className="mt-6 grid gap-4 md:grid-cols-3">{['Monthly','Investor','Interest','Capital','Withdrawal','Tax'].map(r=><Card key={r}><h2 className="font-semibold">{r} report</h2><p className="mt-2 text-sm text-slate-500">Export PDF or Excel.</p></Card>)}</div></section></main> }
