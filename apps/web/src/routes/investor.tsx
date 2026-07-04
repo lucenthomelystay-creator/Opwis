@@ -1,0 +1,4 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { Card } from '@/components/ui/card'; import { PortfolioChart } from '@/components/charts/portfolio-chart';
+export const Route = createFileRoute('/investor')({ component: InvestorDashboard })
+function InvestorDashboard(){ return <main className="min-h-screen p-6 lg:p-10"><h1 className="text-4xl font-bold">Welcome back, Investor</h1><div className="mt-6 grid gap-4 md:grid-cols-4">{['Initial Capital','Current Capital','Interest %','Lifetime Interest'].map((c,i)=><Card key={c}><p className="text-sm text-slate-500">{c}</p><p className="mt-3 text-2xl font-bold">{i===2?'12%':'₹ 12.4L'}</p></Card>)}</div><Card className="mt-6"><PortfolioChart/></Card><button className="mt-6 rounded-2xl bg-primary px-6 py-3 font-semibold text-white">Request Interest</button></main> }

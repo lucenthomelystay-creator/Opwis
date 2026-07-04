@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm --workspace apps/web run build",
+  "installCommand": "npm install --workspace apps/web --include-workspace-root=false",
+  "outputDirectory": "apps/web/.output/public"
+}
